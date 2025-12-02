@@ -4,6 +4,25 @@ import { getUserDailyCalorieTarget, updateUserDailyCalorieTarget } from '../serv
 const router = express.Router()
 
 // GET /api/users/:id/daily-target
+/**
+ * Mengambil target kalori harian untuk seorang pengguna tertentu.
+ *
+ * Route: `GET /api/users/:id/daily-target`
+ *
+ * Params:
+ * - `id` (string, wajib): ID pengguna (biasanya ID di database Supabase).
+ *
+ * Perilaku:
+ * - Mengembalikan HTTP 400 jika `id` tidak dikirim.
+ * - Jika sukses, mengembalikan JSON `{ target }` di mana `target` adalah nilai target kalori harian (bisa null jika belum diset).
+ * - Jika terjadi error, mengembalikan HTTP 500 dengan pesan kesalahan umum.
+ *
+ * @name GET/api/users/:id/daily-target
+ * @function
+ * @param {import('express').Request} req - Objek request Express dengan parameter `id`.
+ * @param {import('express').Response} res - Objek response Express untuk mengirim target kalori harian.
+ * @returns {Promise<void>} Promise yang selesai ketika respons sudah dikirim.
+ */
 router.get('/:id/daily-target', async (req, res) => {
   const { id } = req.params
 
@@ -21,6 +40,28 @@ router.get('/:id/daily-target', async (req, res) => {
 })
 
 // PUT /api/users/:id/daily-target
+/**
+ * Mengupdate atau menyimpan target kalori harian untuk seorang pengguna.
+ *
+ * Route: `PUT /api/users/:id/daily-target`
+ *
+ * Params:
+ * - `id` (string, wajib): ID pengguna.
+ *
+ * Body JSON:
+ * - `target` (number, opsional tetapi sebaiknya diisi): Nilai target kalori harian yang baru.
+ *
+ * Perilaku:
+ * - Mengembalikan HTTP 400 jika `id` tidak dikirim.
+ * - Jika sukses, mengembalikan JSON `{ target: saved }` di mana `saved` adalah nilai target yang tersimpan di database.
+ * - Jika terjadi error, mengembalikan HTTP 500 dengan pesan kesalahan umum.
+ *
+ * @name PUT/api/users/:id/daily-target
+ * @function
+ * @param {import('express').Request} req - Objek request Express dengan parameter `id` dan body `target`.
+ * @param {import('express').Response} res - Objek response Express untuk mengirim target kalori yang tersimpan.
+ * @returns {Promise<void>} Promise yang selesai ketika respons sudah dikirim.
+ */
 router.put('/:id/daily-target', async (req, res) => {
   const { id } = req.params
   const { target } = req.body

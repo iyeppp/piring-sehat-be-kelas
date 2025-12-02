@@ -6,6 +6,15 @@ import foodsRouter from './routes/foods.js';
 import usersRouter from './routes/users.js';
 import authRouter from './routes/auth.js';
 
+/**
+ * Entrypoint utama server Express untuk backend Piring Sehat.
+ *
+ * Tanggung jawab file ini:
+ * - Menginisialisasi instance Express dan middleware global (CORS, JSON parsing, logging sederhana).
+ * - Mendaftarkan semua router utama di bawah prefix `/api`.
+ * - Menerapkan proteksi autentikasi Firebase pada route tertentu.
+ * - Menyediakan handler 404 khusus untuk endpoint `/api/*` dan error handler global.
+ */
 const app = express();
 const port = process.env.PORT || 3000;
 

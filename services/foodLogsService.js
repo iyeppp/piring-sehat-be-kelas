@@ -1,6 +1,16 @@
 import { supabase } from '../supabaseClient.js'
 
 // Ambil catatan makanan untuk user dan tanggal tertentu (YYYY-MM-DD)
+/**
+ * Mengambil daftar catatan makanan dari tabel `food_logs` untuk pengguna dan tanggal tertentu.
+ *
+ * @async
+ * @function getFoodLogsByDate
+ * @param {string} userId - ID pengguna pemilik catatan.
+ * @param {string} date - Tanggal dalam format `YYYY-MM-DD`.
+ * @returns {Promise<object[]>} Promise yang berisi array catatan makanan, atau array kosong jika tidak ada.
+ * @throws {Error} Melempar error dari Supabase jika query gagal.
+ */
 export async function getFoodLogsByDate(userId, date) {
   const { data, error } = await supabase
     .from('food_logs')
@@ -14,6 +24,20 @@ export async function getFoodLogsByDate(userId, date) {
 }
 
 // Tambah catatan makanan baru
+/**
+ * Menambahkan catatan makanan baru ke tabel `food_logs`.
+ *
+ * @async
+ * @function addFoodLog
+ * @param {Object} params - Parameter catatan makanan yang akan disimpan.
+ * @param {string} params.userId - ID pengguna.
+ * @param {string} params.date - Tanggal konsumsi dalam format `YYYY-MM-DD`.
+ * @param {string} params.foodName - Nama makanan custom yang dikonsumsi.
+ * @param {number|string} params.calories - Jumlah kalori makanan tersebut.
+ * @param {?number} [params.foodId=null] - ID referensi ke tabel `makanan` jika tersedia.
+ * @returns {Promise<object>} Promise yang berisi satu baris catatan makanan yang baru dibuat.
+ * @throws {Error} Melempar error dari Supabase jika proses insert gagal.
+ */
 export async function addFoodLog({ userId, date, foodName, calories, foodId = null }) {
   const { data, error } = await supabase
     .from('food_logs')
@@ -32,6 +56,15 @@ export async function addFoodLog({ userId, date, foodName, calories, foodId = nu
 }
 
 // Hapus catatan makanan berdasarkan id
+/**
+ * Menghapus satu catatan makanan dari tabel `food_logs` berdasarkan ID.
+ *
+ * @async
+ * @function deleteFoodLog
+ * @param {number} id - ID catatan makanan yang akan dihapus.
+ * @returns {Promise<void>} Promise yang selesai ketika penghapusan berhasil.
+ * @throws {Error} Melempar error dari Supabase jika proses delete gagal.
+ */
 export async function deleteFoodLog(id) {
   const { error } = await supabase
     .from('food_logs')
@@ -42,6 +75,17 @@ export async function deleteFoodLog(id) {
 }
 
 // Total kalori dalam rentang tanggal (YYYY-MM-DD)
+/**
+ * Menghitung total kalori yang dikonsumsi pengguna dalam rentang tanggal tertentu.
+ *
+ * @async
+ * @function getTotalCaloriesInRange
+ * @param {string} userId - ID pengguna.
+ * @param {string} startDate - Tanggal awal rentang dalam format `YYYY-MM-DD`.
+ * @param {string} endDate - Tanggal akhir rentang dalam format `YYYY-MM-DD`.
+ * @returns {Promise<number>} Promise yang berisi total kalori (number), 0 jika tidak ada data.
+ * @throws {Error} Melempar error dari Supabase jika query gagal.
+ */
 export async function getTotalCaloriesInRange(userId, startDate, endDate) {
   const { data, error } = await supabase
     .from('food_logs')
@@ -57,6 +101,18 @@ export async function getTotalCaloriesInRange(userId, startDate, endDate) {
 
 // Ringkasan nutrisi harian (protein, karbo, lemak) berdasarkan relasi ke tabel makanan
 // Catatan: butuh foreign key food_logs.food_id -> makanan.id di Supabase agar join ini bekerja.
+/**
+ * Mengambil ringkasan nutrisi harian (protein, karbohidrat, lemak) berdasarkan relasi ke tabel `makanan`.
+ *
+ * Fungsi ini mengandalkan foreign key `food_logs.food_id -> makanan.id` di Supabase
+ * untuk melakukan join dan menjumlahkan nilai nutrisi dari makanan yang dikonsumsi.
+ *
+ * @async
+ * @function getDailyNutritionSummary
+ * @param {string} userId - ID pengguna.
+ * @param {string} date - Tanggal dalam format `YYYY-MM-DD`.
+ * @returns {Promise<{protein: number, carbs: number, fat: number}>} Promise yang berisi objek ringkasan nutrisi.
+ */
 export async function getDailyNutritionSummary(userId, date) {
   try {
     const { data, error } = await supabase

@@ -4,6 +4,26 @@ import { searchFoodsByName, getFirstFoodByName, getAllFoods } from '../services/
 const router = express.Router()
 
 // GET /api/foods/search?query=...&limit=...
+/**
+ * Mencari daftar makanan berdasarkan nama, atau mengambil semua makanan saat query kosong.
+ *
+ * Route: `GET /api/foods/search`
+ *
+ * Query params:
+ * - `query` (string, opsional): Kata kunci pencarian nama makanan. Jika kosong, akan mengembalikan semua makanan (dengan batas `limit`).
+ * - `limit` (number, opsional): Batas maksimal jumlah hasil yang dikembalikan. Default 10 jika `query` kosong, atau 5 jika `query` terisi.
+ *
+ * Perilaku:
+ * - Jika `query` kosong atau hanya spasi, memanggil `getAllFoods(limit)` dan mengembalikan `{ data: Food[] }`.
+ * - Jika `query` terisi, memanggil `searchFoodsByName(query, limit)` dan mengembalikan `{ data: Food[] }`.
+ * - Jika terjadi error, mengembalikan HTTP 500 dengan pesan kesalahan umum.
+ *
+ * @name GET/api/foods/search
+ * @function
+ * @param {import('express').Request} req - Objek request Express dengan query `query` dan `limit`.
+ * @param {import('express').Response} res - Objek response Express untuk mengirim daftar makanan hasil pencarian.
+ * @returns {Promise<void>} Promise yang selesai ketika respons sudah dikirim.
+ */
 router.get('/search', async (req, res) => {
   const { query, limit } = req.query
 
@@ -24,6 +44,25 @@ router.get('/search', async (req, res) => {
 })
 
 // GET /api/foods/first?query=...
+/**
+ * Mengambil satu data makanan pertama yang cocok dengan nama yang dicari.
+ *
+ * Route: `GET /api/foods/first`
+ *
+ * Query params:
+ * - `query` (string, wajib): Kata kunci pencarian nama makanan.
+ *
+ * Perilaku:
+ * - Mengembalikan HTTP 400 jika `query` tidak diisi.
+ * - Jika sukses, mengembalikan JSON `{ data: Food | null }` dari `getFirstFoodByName`.
+ * - Jika terjadi error, mengembalikan HTTP 500 dengan pesan kesalahan umum.
+ *
+ * @name GET/api/foods/first
+ * @function
+ * @param {import('express').Request} req - Objek request Express dengan query `query`.
+ * @param {import('express').Response} res - Objek response Express untuk mengirim data makanan pertama yang ditemukan.
+ * @returns {Promise<void>} Promise yang selesai ketika respons sudah dikirim.
+ */
 router.get('/first', async (req, res) => {
   const { query } = req.query
 
@@ -41,6 +80,22 @@ router.get('/first', async (req, res) => {
 })
 
 // GET /api/foods/all - Debug endpoint untuk melihat semua makanan
+/**
+ * Endpoint debug untuk mengambil daftar semua makanan dengan batas maksimum tertentu.
+ *
+ * Route: `GET /api/foods/all`
+ *
+ * Perilaku:
+ * - Memanggil `getAllFoods(100)` dan mengembalikan JSON `{ data: Food[], count }`.
+ * - `count` menunjukkan jumlah baris yang dikembalikan.
+ * - Jika terjadi error, mengembalikan HTTP 500 dengan detail pesan error.
+ *
+ * @name GET/api/foods/all
+ * @function
+ * @param {import('express').Request} req - Objek request Express.
+ * @param {import('express').Response} res - Objek response Express untuk mengirim daftar semua makanan.
+ * @returns {Promise<void>} Promise yang selesai ketika respons sudah dikirim.
+ */
 router.get('/all', async (req, res) => {
   try {
     const foods = await getAllFoods(100)
