@@ -9,28 +9,8 @@ import authRouter from './routes/auth.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Izinkan akses dari frontend lokal dan seluruh deployment Vercel (*.vercel.app)
-const allowedOrigins = [
-  'http://localhost:5173',
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Request tanpa origin (misal dari server-side) langsung diizinkan
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    // Izinkan semua subdomain vercel.app (misalnya preview/prod URL Vercel)
-    if (/\.vercel\.app$/.test(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error('Not allowed by CORS'));
-  },
-}));
+// Sementara: izinkan semua origin untuk memastikan masalah bukan dari CORS
+app.use(cors());
 
 app.use(express.json());
 
