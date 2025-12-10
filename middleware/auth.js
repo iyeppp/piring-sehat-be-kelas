@@ -7,7 +7,7 @@ import { supabase } from '../supabaseClient.js'
  * - Mengambil token dari header `Authorization: Bearer <token>`.
  * - Jika token tidak ada, mengembalikan HTTP 401 dengan pesan `Unauthorized: missing token`.
  * - Jika token ada, memverifikasi menggunakan Firebase Admin.
- * - Jika verifikasi berhasil, mengambil supabaseUserId dari database dan menyimpannya di `req.user`.
+ * - Jika verifikasi berhasil, payload token disimpan di `req.firebaseUser` dan request diteruskan ke handler berikutnya.
  * - Jika verifikasi gagal, mengembalikan HTTP 401 dengan pesan `Unauthorized: invalid token`.
  *
  * @async
