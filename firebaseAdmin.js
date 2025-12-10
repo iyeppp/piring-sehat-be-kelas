@@ -4,10 +4,25 @@ import { fileURLToPath } from 'url'
 import { initializeApp, getApps, getApp, cert } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 
+/**
+ * Inisialisasi Firebase Admin SDK untuk backend.
+ *
+ * Modul ini:
+ * - Memuat konfigurasi environment dari file `.env` di direktori backend.
+ * - Membuat atau mengambil instance Firebase Admin App secara singleton.
+ * - Mengekspor instance `adminAuth` untuk memverifikasi ID token Firebase di middleware.
+ *
+ * Environment variable yang diperlukan:
+ * - `FIREBASE_PROJECT_ID`
+ * - `FIREBASE_CLIENT_EMAIL`
+ * - `FIREBASE_PRIVATE_KEY` (dalam bentuk string dengan `\n` sebagai pemisah baris).
+ */
+
 // Pastikan .env root ter-load (sama seperti supabaseClient)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const rootEnvPath = path.resolve(__dirname, '..', '.env')
+// Di backend terpisah ini, file .env berada di root project yang sama dengan file ini
+const rootEnvPath = path.resolve(__dirname, '.env')
 
 dotenv.config({ path: rootEnvPath })
 
@@ -26,4 +41,11 @@ const app = getApps().length
       }),
     })
 
+/**
+ * Instance Firebase Admin Auth yang digunakan untuk memverifikasi ID token di seluruh backend.
+ *
+ * Dibuat dari aplikasi Firebase Admin yang telah diinisialisasi dengan kredensial service account.
+ *
+ * @type {import('firebase-admin/auth').Auth}
+ */
 export const adminAuth = getAuth(app)
