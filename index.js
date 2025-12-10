@@ -27,7 +27,7 @@ const port = process.env.PORT || 3000
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://piring-sehat.vercel.app',
+  'https://piring-sehat-fe-kelas.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean)
 
