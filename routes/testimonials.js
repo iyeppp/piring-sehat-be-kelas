@@ -40,7 +40,7 @@ router.get('/user/:userId', async (req, res) => {
   }
 
   try {
-    const testimonials = await getTestimonialsByUserId(Number(userId))
+    const testimonials = await getTestimonialsByUserId(userId)
     res.json(testimonials)
   } catch (error) {
     console.error('Error getTestimonialsByUserId:', error)
@@ -78,6 +78,13 @@ router.post('/', async (req, res) => {
   }
 
   try {
+    // Cek apakah user sudah pernah mengirim testimoni
+    const existingTestimonials = await getTestimonialsByUserId(userId)
+
+    if (existingTestimonials && existingTestimonials.length > 0) {
+      return res.status(400).json({ error: 'Anda sudah pernah mengirim testimoni.' })
+    }
+
     const testimonial = await addTestimoni({
       userId,
       username,
